@@ -106,14 +106,14 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
             // and calculate the next g score
             ng = node.g + ((x - node.x === 0 || y - node.y === 0) ? 1 : SQRT2);
 
-            ng *= neighbor.weight;
-
             // if we're avoiding staircasing, add penalties if the direction 
             // will change
             if (avoidStaircase) {
                 lastDirection = node.parent === undefined? undefined : { x : node.x - node.parent.x, y : node.y - node.parent.y };
                 var turned = lastDirection === undefined? 0 : lastDirection.x !== x - node.x || lastDirection.y !== y - node.y;
-                ng += turnPenalty * turned;
+                ng += turnPenalty * turned * neighbor.weight;
+            } else {
+                ng += neighbor.weight;
             }
 
             // check if the neighbor has not been inspected yet, or
